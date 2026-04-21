@@ -406,7 +406,7 @@
           </div>
         </div>
 
-      
+      <div id="message-box" >sfqsdfqs</div>
         <div class="row contact-container no-gutters block-9">
           <div class="col-md-8 order-md-last d-flex">
             <form id="contact-form" class="bg-light p-4 p-md-5 contact-form">
@@ -481,7 +481,9 @@
 document.getElementById('contact-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
+    const messageBox = document.getElementById('message-box');
     const btn = this.querySelector('button');
+
     btn.disabled = true;
     btn.innerText = "Envoi en cours...";
 
@@ -503,17 +505,35 @@ document.getElementById('contact-form').addEventListener('submit', async functio
 
         const result = await response.json();
 
+        messageBox.style.display = 'block';
+        messageBox.classList.remove('fade-out');
+
         if (result.success) {
-            alert("✅ Message envoyé !");
+            messageBox.style.color = 'green';
+            messageBox.innerText = "Message envoyé avec succès !";
             this.reset();
         } else {
-            alert("❌ Une erreur est survenue");
+            messageBox.style.color = 'red';
+            messageBox.innerText = "Une erreur est survenue.";
         }
 
     } catch (error) {
         console.error(error);
-        alert("❌ Erreur serveur");
+
+        messageBox.style.display = 'block';
+        messageBox.classList.remove('fade-out');
+        messageBox.style.color = 'red';
+        messageBox.innerText = "Erreur serveur. Veuillez réessayer.";
     }
+
+    // Fade après 3 secondes
+    setTimeout(() => {
+        messageBox.classList.add('fade-out');
+
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, 500);
+    }, 3000);
 
     btn.disabled = false;
     btn.innerText = "🚀 Envoyer";
